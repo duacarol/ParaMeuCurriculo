@@ -1,11 +1,16 @@
-﻿List<decimal> rctValor = new List<decimal>();
+﻿using System.ComponentModel.Design;
+
+List<decimal> rctValor = new List<decimal>();
 List<string> rctDescricao = new List<string>();
 List<decimal> dpsValor = new List<decimal>();
 List<string> dpsDescricao = new List<string>();
+decimal rctTotal = 0, dpsTotal = 0;
 
+menu:
 Console.WriteLine("Calculadora Financeira");
 Console.WriteLine("1- Adicionar Receita");
 Console.WriteLine("2- Adicionar Despesa");
+Console.WriteLine("3- Calcular Saldo");
 Console.Write("Escolha uma opção: ");
 string opcao = Console.ReadLine();
 switch (opcao)
@@ -20,6 +25,7 @@ switch (opcao)
         string rctDescricaoAdd = Console.ReadLine();
         rctDescricao.Add(rctDescricaoAdd);
         Console.WriteLine(rctDescricao[0]);
+        goto menu;
         break;
 
     case "2":
@@ -32,6 +38,17 @@ switch (opcao)
         string dpsDescricaoAdd = Console.ReadLine();
         dpsDescricao.Add(dpsDescricaoAdd);
         Console.WriteLine(dpsDescricao[0]);
+        goto menu;
+        break;
+
+    case "3":
+        for (int i = 0; i < (rctValor.Count + dpsValor.Count); i++)
+        {
+            rctTotal += rctValor[i];
+            dpsTotal += dpsValor[i];
+        }
+        Console.WriteLine(rctTotal - dpsTotal);
+        goto menu;
         break;
 
     default:
