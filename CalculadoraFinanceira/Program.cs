@@ -1,14 +1,26 @@
-﻿class Program
+﻿class Receita
+{
+    public decimal Valor { get; set; }
+    public string Descricao { get; set; }
+}
+
+class Despesa
+{
+    public decimal Valor { get; set; }
+    public string Descricao { get; set; }
+}
+
+class Program
 {
     static void Main()
     {
-        List<decimal> rctValor = new List<decimal>();
-        List<string> rctDescricao = new List<string>();
-        List<decimal> dpsValor = new List<decimal>();
-        List<string> dpsDescricao = new List<string>();
+        List<Receita> receitas = new List<Receita>();
+        List<Despesa> despesas = new List<Despesa>();
+        decimal totalReceita, totalDespesa, saldo;
 
     menu:
         Console.Clear();
+
         Console.WriteLine("Calculadora Financeira");
         Console.WriteLine("1- Adicionar Receita");
         Console.WriteLine("2- Adicionar Despesa");
@@ -21,14 +33,14 @@
         {
             case "1":
                 Console.Clear();
+
                 Console.Write("Insira o valor da receita: ");
-                decimal rctValorAdd = decimal.Parse(Console.ReadLine());
-                rctValor.Add(rctValorAdd);
+                decimal valorReceita = decimal.Parse(Console.ReadLine());
 
                 Console.Write("Insira uma descrição para a receita: ");
-                string rctDescricaoAdd = Console.ReadLine();
-                rctDescricao.Add(rctDescricaoAdd);
+                string descricaoReceita = Console.ReadLine();
 
+                receitas.Add(new Receita { Valor = valorReceita, Descricao = descricaoReceita });
                 Console.WriteLine("Receita adicionada com sucesso!");
                 Console.Write("Pressione qualquer tecla para voltar ao menu...");
                 Console.ReadKey();
@@ -37,16 +49,14 @@
 
             case "2":
                 Console.Clear();
+
                 Console.Write("Insira o valor da despesa: ");
-                decimal dpsValorAdd = decimal.Parse(Console.ReadLine());
-                dpsValor.Add(dpsValorAdd);
-                Console.WriteLine(dpsValor[0]);
+                decimal valorDespesa = decimal.Parse(Console.ReadLine());
 
                 Console.Write("Insira uma descrição para a despesa: ");
-                string dpsDescricaoAdd = Console.ReadLine();
-                dpsDescricao.Add(dpsDescricaoAdd);
-                Console.WriteLine(dpsDescricao[0]);
+                string descricaoDespesa = Console.ReadLine();
 
+                despesas.Add(new Despesa { Valor = valorDespesa, Descricao = descricaoDespesa });
                 Console.WriteLine("Despesa adicionada com sucesso!");
                 Console.Write("Pressione qualquer tecla para voltar ao menu...");
                 Console.ReadKey();
@@ -55,13 +65,17 @@
 
             case "3":
                 Console.Clear();
-                decimal rctTotal = 0, dpsTotal = 0, saldo = 0;
-                for (int i = 0; i <= (rctValor.Count - 1) + (dpsValor.Count - 1); i++)
-                {
-                    rctTotal += rctValor[i];
-                    dpsTotal += dpsValor[i];
-                }
-                saldo = rctTotal - dpsTotal;
+
+                totalReceita = 0; totalDespesa = 0;
+
+                foreach (var receita in receitas)
+                    totalReceita += receita.Valor;
+
+                foreach (var despesa in despesas)
+                    totalDespesa += despesa.Valor;
+
+                saldo = totalReceita - totalDespesa;
+
                 // to do - inserir cores diferentes pra cd saldo:
                 if (saldo > 0)
                     Console.WriteLine($"Você está com um saldo de {saldo:C}."); //verde
@@ -80,31 +94,35 @@
             case "4":
                 Console.Clear();
 
-                rctTotal = 0; dpsTotal = 0; saldo = 0;
+                totalReceita = 0; totalDespesa = 0;
 
                 Console.WriteLine("RECEITAS");
-                for (int i = 0; i < rctValor.Count; i++)
+                foreach (var receita in receitas)
                 {
-                    Console.Write($"{rctDescricao[i]}\t\t");
-                    Console.WriteLine($"{rctValor[i]:C}");
-                    rctTotal += rctValor[i];
+                    Console.Write($"{receita.Descricao}\t\t");
+                    Console.WriteLine($"{receita.Valor:C}");
+                    totalReceita += receita.Valor;
                 }
-                Console.Write("TOTAL RECEITAS\t");
-                Console.WriteLine($"{rctTotal:C}");
+                Console.Write("TOTAL RECEITAS\t\t");
+                Console.WriteLine($"{totalReceita:C}\n");
 
                 Console.WriteLine("DESPESAS");
-                for (int i = 0; i < dpsValor.Count; i++)
+                foreach (var despesa in despesas)
                 {
-                    Console.Write($"{dpsDescricao[i]}\t\t");
-                    Console.WriteLine($"{dpsValor[i]:C}");
-                    dpsTotal += dpsValor[i];
+                    Console.Write($"{despesa.Descricao}\t\t");
+                    Console.WriteLine($"{despesa.Valor:C}");
+                    totalDespesa += despesa.Valor;
                 }
-                Console.Write("TOTAL DESPESAS\t");
-                Console.WriteLine($"{dpsTotal:C}");
+                Console.Write("TOTAL DESPESAS\t\t");
+                Console.WriteLine($"{totalDespesa:C}\n");
 
-                saldo = rctTotal - dpsTotal;
-                Console.Write("SALDO FINAL\t");
+                saldo = totalReceita - totalDespesa;
+                Console.Write("SALDO FINAL\t\t");
                 Console.WriteLine($"{saldo:C}");
+
+                Console.Write("Pressione qualquer tecla para voltar ao menu...");
+                Console.ReadKey();
+                goto menu;
                 break;
 
             default:
