@@ -1,4 +1,6 @@
-﻿class Receita
+﻿using Newtonsoft.Json;
+
+class Receita
 {
     public decimal Valor { get; set; }
     public string Descricao { get; set; }
@@ -12,10 +14,13 @@ class Despesa
 
 class Program
 {
+    static List<Receita> receitas = new List<Receita>();
+    static List<Despesa> despesas = new List<Despesa>();
+    static string filePath = "financas.json";
     static void Main()
     {
-        List<Receita> receitas = new List<Receita>();
-        List<Despesa> despesas = new List<Despesa>();
+        CarregarDados();
+
         decimal totalReceita, totalDespesa, saldo;
 
     menu:
@@ -42,6 +47,7 @@ class Program
 
                 receitas.Add(new Receita { Valor = valorReceita, Descricao = descricaoReceita });
                 Console.WriteLine("Receita adicionada com sucesso!");
+                SalvarDados();
                 Console.Write("Pressione qualquer tecla para voltar ao menu...");
                 Console.ReadKey();
                 goto menu;
@@ -58,6 +64,7 @@ class Program
 
                 despesas.Add(new Despesa { Valor = valorDespesa, Descricao = descricaoDespesa });
                 Console.WriteLine("Despesa adicionada com sucesso!");
+                SalvarDados();
                 Console.Write("Pressione qualquer tecla para voltar ao menu...");
                 Console.ReadKey();
                 goto menu;
@@ -131,4 +138,27 @@ class Program
                 break;
         }
     }
+    static void CarregarDados()
+    {
+        if (File.Exists(filePath))
+        {
+            string json = File.ReadAllText(filePath);
+            var financas = JsonConvert.DeserializeObject<Financas>(json);
+            
+            receitas = financas.Receitas;
+            despesas = financas.Despesas;
+        }
+    }
+    static void SalvarDados()
+    {
+        var financas = new { receitas, despesas };
+        string json = JsonConvert.SerializeObject(financas, Formatting.Indented);
+
+        File.WriteAllText(filePath, json);
+    }    
+}
+class Financas
+{
+    public List<Receita> Receitas { get; set; }
+    public List<Despesa> Despesas { get; set; }
 }
