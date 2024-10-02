@@ -54,7 +54,7 @@ class Program
                 goto escolhaOpcao;
         }
         SalvarDados();
-        Console.Write("Pressione qualquer tecla para voltar ao menu...");
+        Console.Write("\nPressione qualquer tecla para voltar ao menu...");
         Console.ReadKey();
         goto menu;
     }
@@ -64,11 +64,11 @@ class Program
         Console.Write("Insira o valor da receita: ");
         decimal valorReceita = decimal.Parse(Console.ReadLine());
 
-        Console.Write("Insira uma descrição para a receita: ");
+        Console.Write("Insira um descritor breve para a receita: ");
         string descricaoReceita = Console.ReadLine();
 
         receitas.Add(new Receita { Valor = valorReceita, Descricao = descricaoReceita });
-        Console.WriteLine("Receita adicionada com sucesso!");        
+        Console.WriteLine("Receita adicionada com sucesso!");
     }
 
     static void AdicionarDespesa()
@@ -76,7 +76,7 @@ class Program
         Console.Write("Insira o valor da despesa: ");
         decimal valorDespesa = decimal.Parse(Console.ReadLine());
 
-        Console.Write("Insira uma descrição para a despesa: ");
+        Console.Write("Insira um descritor breve para a despesa: ");
         string descricaoDespesa = Console.ReadLine();
 
         despesas.Add(new Despesa { Valor = valorDespesa, Descricao = descricaoDespesa });
@@ -109,30 +109,37 @@ class Program
     {
         decimal totalReceita = 0, totalDespesa = 0;
 
-        Console.WriteLine("RECEITAS");
+        Console.WriteLine(new string('-', 32)); // Linha de separação
+        Console.WriteLine($"{"RECEITAS".PadLeft(15 + "RECEITAS".Length / 2).PadRight(32)}");
+        Console.WriteLine(new string('-', 32)); // Linha de separação
+        Console.WriteLine($"{"DESCRIÇÃO".PadRight(20)} {"VALOR",-10}"); // Cabeçalho
+        Console.WriteLine(new string('-', 32)); // Linha de separação
         foreach (var receita in receitas)
         {
-            Console.Write($"{receita.Descricao}\t\t");
-            Console.WriteLine($"{receita.Valor:C}");
+            Console.WriteLine($"{receita.Descricao.PadRight(20)} {receita.Valor,-10:C}");
             totalReceita += receita.Valor;
         }
-        Console.Write("TOTAL RECEITAS\t\t");
-        Console.WriteLine($"{totalReceita:C}\n");
+        Console.WriteLine(new string('-', 32)); // Linha de separação
+        Console.WriteLine($"{"TOTAL RECEITAS".PadRight(20)} {totalReceita,-10:C}\n");
 
-        Console.WriteLine("DESPESAS");
+        Console.WriteLine(new string('-', 32)); // Linha de separação
+        Console.WriteLine($"{"DESPESAS".PadLeft(15 + "DESPESAS".Length / 2).PadRight(32)}");
+        Console.WriteLine(new string('-', 32)); // Linha de separação
+        Console.WriteLine($"{"DESCRIÇÃO".PadRight(20)} {"VALOR",-10}"); // Cabeçalho
+        Console.WriteLine(new string('-', 32)); // Linha de separação
         foreach (var despesa in despesas)
         {
-            Console.Write($"{despesa.Descricao}\t\t");
-            Console.WriteLine($"{despesa.Valor:C}");
+            Console.WriteLine($"{despesa.Descricao.PadRight(20)} {despesa.Valor,-10:C}");
             totalDespesa += despesa.Valor;
         }
-        Console.Write("TOTAL DESPESAS\t\t");
-        Console.WriteLine($"{totalDespesa:C}\n");
+        Console.WriteLine(new string('-', 32)); // Linha de separação
+        Console.WriteLine($"{"TOTAL DESPESAS".PadRight(20)} {totalDespesa,-10:C}\n");
 
         decimal saldo = totalReceita - totalDespesa;
-        Console.Write("SALDO FINAL\t\t");
-        Console.WriteLine($"{saldo:C}");
+        Console.WriteLine(new string('-', 32)); // Linha de separação
+        Console.WriteLine($"{"SALDO FINAL".PadRight(20)} {saldo,-10:C}");
     }
+
     static void CarregarDados()
     {
         if (File.Exists(filePath))
@@ -140,8 +147,8 @@ class Program
             string json = File.ReadAllText(filePath);
             var financas = JsonConvert.DeserializeObject<Financas>(json);
 
-            receitas = financas.Receitas;
-            despesas = financas.Despesas;
+            receitas = financas.Receitas ?? new List<Receita>();
+            despesas = financas.Despesas ?? new List<Despesa>();
         }
     }
     static void SalvarDados()
