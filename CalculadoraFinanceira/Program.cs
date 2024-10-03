@@ -26,7 +26,7 @@ class Program
         Console.WriteLine("1- Adicionar Receita");
         Console.WriteLine("2- Adicionar Despesa");
         Console.WriteLine("3- Calcular Saldo");
-        Console.WriteLine("4- Relatórios");
+        Console.WriteLine("4- Gerar Relatório");
         Console.WriteLine("0- Sair");
     escolhaOpcao:
         Console.Write("Escolha uma opção: ");
@@ -48,7 +48,7 @@ class Program
                     break;
                 case 4:
                     EscreverTitulo();
-                    Relatorios();
+                    GerarRelatorio();
                     break;
                 case 0:
                     EscreverTitulo();
@@ -138,7 +138,7 @@ class Program
             Console.WriteLine($"Você está com um saldo de {saldo:C}.");
     }
 
-    static void Relatorios()
+    static void GerarRelatorio()
     {
         decimal totalReceita = 0, totalDespesa = 0;
 
