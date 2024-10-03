@@ -7,20 +7,20 @@ Aplicação desenvolvida durante as aulas de Projeto de Interface Web do curso t
 - Laços de repetição e controle de fluxo para gerenciar a interação do usuário.
 
 ## Etapas implementadas
-1. **Definição de classes**:
-- [x] `Receita`: Representa uma receita com valor e descrição.
-- [x] `Despesa`: Representa uma despesa com valor e descrição.
-- [x] `Financas`: Agrupa listas de receitas e despesas.
+1. **Definição de classes**
+    - [x] `Receita`: Representa uma receita com valor e descrição.
+    - [x] `Despesa`: Representa uma despesa com valor e descrição.
+    - [x] `Financas`: Agrupa listas de receitas e despesas.
 
 2. **Funcionalidades**:
-- [x] **Adicionar Receita**: O usuário pode inserir uma nova receita, informando a descrição e o valor.
-- [x] **Adicionar Despesa**: O usuário pode inserir uma nova despesa, informando a descrição e o valor.
-- [x] **Calcular Saldo**: O programa calcula e exibe o saldo total, mostrando se está positivo, negativo ou zerado.
-- [x] **Gerar Relatório**: O usuário pode visualizar todas as receitas e despesas registradas, incluindo totais e saldo final.
+    - [x] **Adicionar Receita**: O usuário pode inserir uma nova receita, informando a descrição e o valor.
+    - [x] **Adicionar Despesa**: O usuário pode inserir uma nova despesa, informando a descrição e o valor.
+    - [x] **Calcular Saldo**: O programa calcula e exibe o saldo total, mostrando se está positivo, negativo ou zerado.
+    - [x] **Gerar Relatório**: O usuário pode visualizar todas as receitas e despesas registradas, incluindo totais e saldo final.
 
-3. **Persistência de dados**:
-- [x] Os dados são salvos em um arquivo `financas.json`, permitindo que as informações sejam mantidas entre execuções do programa.
-- [x] Os dados são carregados automaticamente na inicialização do programa.
+3. **Persistência de dados**
+    - [x] Os dados são salvos em um arquivo `financas.json`, permitindo que as informações sejam mantidas entre execuções do programa.
+    - [x] Os dados são carregados automaticamente na inicialização do programa.
 
 ## Backlog
 - [ ] Implementar opção para remover receitas e despesas previamente adicionadas.
