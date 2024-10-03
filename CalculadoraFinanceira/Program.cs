@@ -1,5 +1,4 @@
-﻿using System.Formats.Asn1;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 class Receita
 {
@@ -23,12 +22,12 @@ class Program
     {
         CarregarDados();
     menu:
-        Console.Clear();
-        Console.WriteLine("CALCULADORA FINANCEIRA");
+        EscreverTitulo();
         Console.WriteLine("1- Adicionar Receita");
         Console.WriteLine("2- Adicionar Despesa");
         Console.WriteLine("3- Calcular Saldo");
         Console.WriteLine("4- Relatórios");
+        Console.WriteLine("0- Sair");
     escolhaOpcao:
         Console.Write("Escolha uma opção: ");
         if (int.TryParse(Console.ReadLine(), out int opcao))
@@ -36,23 +35,27 @@ class Program
             switch (opcao)
             {
                 case 1:
-                    Console.Clear();
+                    EscreverTitulo();
                     AdicionarReceita();
                     break;
                 case 2:
-                    Console.Clear();
+                    EscreverTitulo();
                     AdicionarDespesa();
                     break;
                 case 3:
-                    Console.Clear();
+                    EscreverTitulo();
                     CalcularSaldo();
                     break;
                 case 4:
-                    Console.Clear();
+                    EscreverTitulo();
                     Relatorios();
                     break;
+                case 0:
+                    EscreverTitulo();
+                    Console.WriteLine("Saindo...");
+                    return;
                 default:
-                    Console.WriteLine("Opção inválida! Tente novamente.");
+                    ColorirLinha("Opção inválida! Tente novamente.", ConsoleColor.Yellow);
                     goto escolhaOpcao;
             }
             SalvarDados();
@@ -62,65 +65,57 @@ class Program
         }
         else
         {
-            Console.WriteLine("Opção inválida! Tente novamente.");
+            ColorirLinha("Opção inválida! Tente novamente.", ConsoleColor.Yellow);
             goto escolhaOpcao;
         }
     }
 
     static void AdicionarReceita()
     {
-    escolhaDescricaoReceita:
-        Console.Write("Insira uma descrição breve para a receita (até 25 caracteres): ");
-        string descricaoReceita = Console.ReadLine();
-        if (string.IsNullOrEmpty(descricaoReceita))
-        {
-            Console.WriteLine("A descrição não pode ficar vazia. Tente novamente.");
-            goto escolhaDescricaoReceita;
-        }
-        else if (descricaoReceita.Length > 25)
-        {
-            Console.WriteLine("A descrição não pode ter mais que 25 caracteres. Tente novamente.");
-            goto escolhaDescricaoReceita;
-        }
-
-    escolhaValorReceita:
-        Console.Write("Insira o valor da despesa: ");
-        if (!(decimal.TryParse(Console.ReadLine(), out decimal valorReceita) && valorReceita > 0))
-        {
-            Console.WriteLine("O valor precisa ser um número maior que 0. Tente novamente.");
-            goto escolhaValorReceita;
-        }
+        string descricaoReceita = ObterDescricao("receita");
+        decimal valorReceita = ObterValor("receita");
 
         receitas.Add(new Receita { Valor = valorReceita, Descricao = descricaoReceita });
-        Console.WriteLine("Receita adicionada com sucesso!");
+        ColorirLinha("\nReceita adicionada com sucesso!", ConsoleColor.Cyan);
     }
 
     static void AdicionarDespesa()
     {
-    escolhaDescricaoDespesa:
-        Console.Write("Insira uma descrição breve para a despesa (até 25 caracteres): ");
-        string descricaoDespesa = Console.ReadLine();
-        if (string.IsNullOrEmpty(descricaoDespesa))
-        {
-            Console.WriteLine("A descrição não pode ficar vazia. Tente novamente.");
-            goto escolhaDescricaoDespesa;
-        }
-        else if (descricaoDespesa.Length > 25)
-        {
-            Console.WriteLine("A descrição não pode ter mais que 25 caracteres. Tente novamente.");
-            goto escolhaDescricaoDespesa;
-        }
-
-    escolhaValorDespesa:
-        Console.Write("Insira o valor da despesa: ");
-        if (!(decimal.TryParse(Console.ReadLine(), out decimal valorDespesa) && valorDespesa > 0))
-        {
-            Console.WriteLine("O valor precisa ser um número maior que 0. Tente novamente.");
-            goto escolhaValorDespesa;
-        }
+        string descricaoDespesa = ObterDescricao("despesa");
+        decimal valorDespesa = ObterValor("despesa");
 
         despesas.Add(new Despesa { Valor = valorDespesa, Descricao = descricaoDespesa });
-        Console.WriteLine("Despesa adicionada com sucesso!");
+        ColorirLinha("\nDespesa adicionada com sucesso!", ConsoleColor.Cyan);
+    }
+
+    static string ObterDescricao(string tipo)
+    {
+    escolhaDescricao:
+        Console.Write($"Insira uma descrição breve para a {tipo} (até 25 caracteres): ");
+        string descricao = Console.ReadLine();
+        if (string.IsNullOrEmpty(descricao))
+        {
+            ColorirLinha("A descrição não pode ficar vazia. Tente novamente.", ConsoleColor.Yellow);
+            goto escolhaDescricao;
+        }
+        else if (descricao.Length > 25)
+        {
+            ColorirLinha("A descrição não pode ter mais que 25 caracteres. Tente novamente.", ConsoleColor.Yellow);
+            goto escolhaDescricao;
+        }
+        return descricao;
+    }
+
+    static decimal ObterValor(string tipo)
+    {
+    escolhaValor:
+        Console.Write($"Insira o valor da {tipo}: ");
+        if (!(decimal.TryParse(Console.ReadLine(), out decimal valor) && valor > 0))
+        {
+            ColorirLinha("O valor precisa ser um número maior que 0. Tente novamente.", ConsoleColor.Yellow);
+            goto escolhaValor;
+        }
+        return valor;
     }
 
     static void CalcularSaldo()
@@ -136,11 +131,9 @@ class Program
         decimal saldo = totalReceita - totalDespesa;
 
         if (saldo > 0)
-            Console.WriteLine($"Você está com um saldo de \u001b[30m{saldo:C}\u001b[0m.");
-
+            Console.WriteLine($"Você está com um saldo de \u001b[32m{saldo:C}\u001b[0m.");
         else if (saldo < 0)
             Console.WriteLine($"Você está com um saldo de \u001b[31m{saldo:C}\u001b[0m.");
-
         else
             Console.WriteLine($"Você está com um saldo de {saldo:C}.");
     }
@@ -149,55 +142,49 @@ class Program
     {
         decimal totalReceita = 0, totalDespesa = 0;
 
-        if (receitas.Count() == 0 && despesas.Count() == 0)
+        if (!receitas.Any() && !despesas.Any())
+            ColorirLinha("Nenhuma receita ou despesa salva na memória.", ConsoleColor.Yellow);
+
+        if (receitas.Any())
         {
-            Console.WriteLine("Nenhuma receita ou despesa salva na memória.");
-        }
-        if (receitas.Count() != 0)
-        {
-            Console.WriteLine(new string('-', 30)); // Linha de separação
-            Console.WriteLine($"{"RECEITAS".PadLeft(15 + "RECEITAS".Length / 2).PadRight(30)}");
-            Console.WriteLine(new string('-', 30)); // Linha de separação
-            Console.WriteLine($"{"DESCRIÇÃO".PadRight(20)} {"VALOR",-10}"); // Cabeçalho
-            Console.WriteLine(new string('-', 30)); // Linha de separação
+            Console.WriteLine("\nR E C E I T A S\n");
+            Console.Write($"{"DESCRIÇÃO".PadRight(30)}");
+            Console.WriteLine("VALOR");
             foreach (var receita in receitas)
             {
-                Console.WriteLine($"{receita.Descricao.PadRight(20)} {receita.Valor,-10:C}");
+                Console.Write($"{receita.Descricao.PadRight(30)}");
+                Console.WriteLine($"{receita.Valor:C}");
                 totalReceita += receita.Valor;
             }
-            Console.WriteLine(new string('-', 30)); // Linha de separação
-            Console.WriteLine($"{"TOTAL RECEITAS".PadRight(20)} {totalReceita,-10:C}");
+            Console.Write($"{"TOTAL".PadRight(30)}");
+            Console.WriteLine($"{totalReceita:C}\n");
         }
-        if (despesas.Count() != 0)
+
+        if (despesas.Any())
         {
-            Console.WriteLine(new string('-', 30)); // Linha de separação
-            Console.WriteLine($"{"DESPESAS".PadLeft(15 + "DESPESAS".Length / 2).PadRight(30)}");
-            Console.WriteLine(new string('-', 30)); // Linha de separação
-            Console.WriteLine($"{"DESCRIÇÃO".PadRight(20)} {"VALOR",-10}"); // Cabeçalho
-            Console.WriteLine(new string('-', 30)); // Linha de separação
+            Console.WriteLine("D E S P E S A S\n");
+            Console.Write($"{"DESCRIÇÃO".PadRight(30)}");
+            Console.WriteLine("VALOR");
             foreach (var despesa in despesas)
             {
-                Console.WriteLine($"{despesa.Descricao.PadRight(20)} {despesa.Valor,-10:C}");
+                Console.Write($"{despesa.Descricao.PadRight(30)}");
+                Console.WriteLine($"{despesa.Valor:C}");
                 totalDespesa += despesa.Valor;
             }
-            Console.WriteLine(new string('-', 30)); // Linha de separação
-            Console.WriteLine($"{"TOTAL DESPESAS".PadRight(20)} {totalDespesa,-10:C}");
+            Console.Write($"{"TOTAL".PadRight(30)}");
+            Console.WriteLine($"{totalDespesa:C}\n");
         }
 
-        if (receitas.Count() == 0 && despesas.Count() != 0)
-        {
-            Console.WriteLine("Nenhuma receita salva na memória.");
-        }
-        else if (receitas.Count() != 0 && despesas.Count() == 0)
-        {
-            Console.WriteLine("Nenhuma despesa salva na memória.");
-        }
+        if (!receitas.Any() && despesas.Any())
+            ColorirLinha("Nenhuma receita salva na memória.", ConsoleColor.Yellow);
+        else if (receitas.Any() && !despesas.Any())
+            ColorirLinha("Nenhuma despesa salva na memória.", ConsoleColor.Yellow);
 
-        if (receitas.Count() != 0 && despesas.Count() != 0)
+        if (receitas.Any() && despesas.Any())
         {
             decimal saldo = totalReceita - totalDespesa;
-            Console.WriteLine(new string('-', 30)); // Linha de separação
-            Console.WriteLine($"{"SALDO FINAL".PadRight(20)} {saldo,-10:C}");
+            Console.Write($"{"S A L D O   F I N A L".PadRight(30)}");
+            Console.WriteLine($"{saldo:C}");
         }
     }
 
@@ -212,14 +199,32 @@ class Program
             despesas = financas.Despesas ?? new List<Despesa>();
         }
     }
+
     static void SalvarDados()
     {
         var financas = new { receitas, despesas };
         string json = JsonConvert.SerializeObject(financas, Formatting.Indented);
-
         File.WriteAllText(filePath, json);
     }
+
+    static void EscreverTitulo()
+    {
+        Console.Clear();
+        Console.ForegroundColor = ConsoleColor.Cyan;
+        Console.WriteLine(new string('=', 43));
+        Console.WriteLine("C A L C U L A D O R A   F I N A N C E I R A");
+        Console.WriteLine(new string('=', 43));
+        Console.ResetColor();
+    }
+
+    static void ColorirLinha(string texto, ConsoleColor cor)
+    {
+        Console.ForegroundColor = cor;
+        Console.WriteLine(texto);
+        Console.ResetColor();
+    }
 }
+
 class Financas
 {
     public List<Receita> Receitas { get; set; }
